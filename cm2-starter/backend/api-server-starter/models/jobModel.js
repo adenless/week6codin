@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const jobSchema = new mongoose.Schema({
   title: { type: String, required: true },
@@ -10,8 +10,8 @@ const jobSchema = new mongoose.Schema({
     name: { type: String, required: true },
     description: { type: String, required: true },
     contactEmail: { type: String, required: true },
-    contactPhone: { type: String, required: true }
-  }
+    contactPhone: { type: String, required: true },
+  },
 });
 
 // Ensure virtual fields are serialized
@@ -22,10 +22,9 @@ jobSchema.set('toJSON', {
     delete ret._id;
     delete ret.__v;
     return ret;
-  }
+  },
 });
 
+// Create and export the Job model
 const Job = mongoose.model('Job', jobSchema);
-
-module.exports = Job;
-
+export default Job; // Use ES module export

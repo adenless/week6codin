@@ -1,26 +1,13 @@
-const unknownEndpoint = (request, response) => {
-  response.status(404).send({ error: "unknown endpoint" });
+// Middleware for handling unknown endpoints
+const unknownEndpoint = (req, res) => {
+  res.status(404).json({ error: 'Unknown endpoint' });
 };
 
-const errorHandler = (error, request, response, next) => {
-  console.error(error.message);
-
-  response.status(500);
-  response.json({
-    message: error.message,
-  });
+// Middleware for handling errors
+const errorHandler = (err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Something went wrong' });
 };
 
-const requestLogger = (req, res, next) => {
-  console.log("Method:", req.method);
-  console.log("Path:  ", req.path);
-  console.log("Body:  ", req.body);
-  console.log("---");
-  next();
-};
-
-module.exports = {
-  requestLogger,
-  unknownEndpoint,
-  errorHandler,
-};
+// Export the middleware functions
+export { unknownEndpoint, errorHandler };

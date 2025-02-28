@@ -1,9 +1,20 @@
-const express = require("express");
+import express from 'express';
+import {
+  getAllJobs,
+  getJobById,
+  createJob,
+  updateJob,
+  deleteJob,
+} from '../controllers/jobControllers.js';
+
 const router = express.Router();
-const jobController = require("../controllers/jobController");
 
 // Define routes
-router.get("/", jobController.getAllJobs); // Example route
-router.post("/", jobController.createJob); // Example route
+router.get('/', getAllJobs); // GET /api/jobs
+router.get('/:id', getJobById); // GET /api/jobs/:id
+router.post('/', createJob); // POST /api/jobs
+router.put('/:id', updateJob); // PUT /api/jobs/:id
+router.delete('/:id', deleteJob); // DELETE /api/jobs/:id
 
-module.exports = router;
+// Export the router
+export default router;
