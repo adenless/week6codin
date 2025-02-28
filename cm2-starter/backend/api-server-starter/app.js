@@ -5,7 +5,8 @@ import { unknownEndpoint, errorHandler } from './middleware/customMiddleware.js'
 import connectDB from './config/db.js';
 import cors from 'cors';
 import userRouter from './routes/userRouter.js';
-import jobRouter from './routes/jobRouter.js'; // Import jobRouter
+import jobRouter from './routes/jobRouter.js';
+import authRouter from './routes/authRouter.js'; // Import authRouter
 
 const app = express();
 
@@ -16,6 +17,9 @@ app.use(morgan('dev'));
 
 // Connect to the database
 connectDB();
+
+// Use the authRouter for authentication routes
+app.use('/api/auth', authRouter);
 
 // Use the userRouter for all /api/users routes
 app.use('/api/users', userRouter);
