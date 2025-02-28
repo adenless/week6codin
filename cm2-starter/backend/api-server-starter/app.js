@@ -1,27 +1,30 @@
-require('dotenv').config()
-const express = require("express");
+import 'dotenv/config';
+import express from 'express';
+import morgan from 'morgan';
+import { unknownEndpoint, errorHandler } from './middleware/customMiddleware.js';
+import connectDB from './config/db.js';
+import cors from 'cors';
+import userRouter from './routes/userRouter.js'; // Import userRouter
+
 const app = express();
-const morgan = require("morgan");
-// const userRouter = require("./routes/userRouter");
-const { unknownEndpoint,errorHandler } = require("./middleware/customMiddleware");
-const connectDB = require("./config/db");
-const cors = require("cors");
 
 // Middlewares
-app.use(cors())
+app.use(cors());
 app.use(express.json());
-app.use(morgan("dev"));
+app.use(morgan('dev'));
 
+// Connect to the database
 connectDB();
 
-// Use the userRouter for all /users routes
-// app.use("/api/users", userRouter);
+// Use the userRouter for all /api/users routes
+app.use('/api/users', userRouter);
 
+// Custom middleware for unknown endpoints and error handling
 app.use(unknownEndpoint);
 app.use(errorHandler);
 
-const port = process.env.PORT || 4000;
 // Start the server
+const port = process.env.PORT || 4000;
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
