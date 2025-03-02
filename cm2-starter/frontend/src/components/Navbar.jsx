@@ -1,43 +1,55 @@
-import { NavLink } from 'react-router-dom';
-import logo from '../assets/images/logo.png';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
-  const linkClass = ({ isActive }) =>
-    isActive
-      ? 'bg-black text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'
-      : 'text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2';
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token')); // Check token on mount
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkAuth = () => {
+      setIsLoggedIn(!!localStorage.getItem('token'));
+    };
+
+    window.addEventListener('storage', checkAuth); // Listen for token changes
+    return () => window.removeEventListener('storage', checkAuth);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token'); 
+    setIsLoggedIn(false); 
+    navigate('/'); 
+  };
 
   return (
-    <nav className='bg-indigo-700 border-b border-indigo-500'>
-      <div className='mx-auto max-w-7xl px-2 sm:px-6 lg:px-8'>
-        <div className='flex h-20 items-center justify-between'>
-          <div className='flex flex-1 items-center justify-center md:items-stretch md:justify-start'>
-            <NavLink className='flex flex-shrink-0 items-center mr-4' to='/'>
-              <img className='h-10 w-auto' src={logo} alt='React Jobs' />
-              <span className='hidden md:block text-white text-2xl font-bold ml-2'>
-                React Jobs
-              </span>
-            </NavLink>
-            <div className='md:ml-auto'>
-              <div className='flex space-x-2'>
-                <NavLink to='/' className={linkClass}>
-                  Home
-                </NavLink>
-                <NavLink to='/jobs' className={linkClass}>
-                  Jobs
-                </NavLink>
-                <NavLink to='/add-job' className={linkClass}>
-                  Add Job
-                </NavLink>
-                <NavLink to='/signup' className={linkClass}>
-                  Sign Up
-                </NavLink>
-                <NavLink to='/login' className={linkClass}>
-                  Login
-                </NavLink>
-              </div>
-            </div>
-          </div>
+    <nav className="bg-blue-600 p-4">
+      <div className="max-w-7xl mx-auto flex justify-between items-center text-white">
+        <div className="text-2xl font-semibold cursor-pointer" onClick={() => navigate('/')}>
+          My App
+        </div>
+        <div>
+          {isLoggedIn ? (
+            <button
+              onClick={handleLogout}
+              className="px-4 py-2 bg-red-500 rounded-md hover:bg-red-600"
+            >
+              Log Out
+            </button>
+          ) : (
+            <>
+              <button
+                onClick={() => navigate('/login')}
+                className="px-4 py-2 bg-blue-500 rounded-md hover:bg-blue-700 mr-4"
+              >
+                Log In
+              </button>
+              <button
+                onClick={() => navigate('/signup')}
+                className="px-4 py-2 bg-green-500 rounded-md hover:bg-green-700"
+              >
+                Sign Up
+              </button>
+            </>
+          )}
         </div>
       </div>
     </nav>
